@@ -62,3 +62,45 @@ func TestBookiesListDiskFile(t *testing.T) {
 	_, err := admin.Bookies.ListDiskFile()
 	require.NoError(t, err)
 }
+
+func TestBookiesIsInForceGc(t *testing.T) {
+	broker := startTestBroker(t)
+	defer broker.Close()
+	admin := NewTestBookkeeperAdmin(t, broker.webPort)
+	_, err := admin.Bookies.IsInForceGc()
+	require.NoError(t, err)
+}
+
+func TestBookiesGcStatus(t *testing.T) {
+	broker := startTestBroker(t)
+	defer broker.Close()
+	admin := NewTestBookkeeperAdmin(t, broker.webPort)
+	_, err := admin.Bookies.GcStatusList()
+	require.NoError(t, err)
+}
+
+func TestBookiesStatus(t *testing.T) {
+	broker := startTestBroker(t)
+	defer broker.Close()
+	admin := NewTestBookkeeperAdmin(t, broker.webPort)
+	_, err := admin.Bookies.Status()
+	require.NoError(t, err)
+}
+
+func TestBookiesIsReady(t *testing.T) {
+	broker := startTestBroker(t)
+	defer broker.Close()
+	admin := NewTestBookkeeperAdmin(t, broker.webPort)
+	_, err := admin.Bookies.IsReady()
+	require.NoError(t, err)
+}
+
+func TestBookiesInfo(t *testing.T) {
+	broker := startTestBroker(t)
+	defer broker.Close()
+	admin := NewTestBookkeeperAdmin(t, broker.webPort)
+	info, err := admin.Bookies.BookieInfo()
+	require.NoError(t, err)
+	assert.Greater(t, info.FreeSpace, int64(0))
+	assert.Greater(t, info.TotalSpace, int64(0))
+}
