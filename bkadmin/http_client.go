@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"time"
 )
 
 type HttpClient interface {
@@ -68,7 +69,19 @@ func (h *HttpClientImpl) Do(req *http.Request) (*http.Response, error) {
 }
 
 func newHttpClient(config Config) (HttpClient, error) {
-	cli := &http.Client{}
+	var cli *http.Client
+	if config.TlsEnable {
+		cli = &http.Client{
+			Timeout: time.Millisecond * time.Duration(config.ConnectionTimeout),
+			Transport: &http.Transport{
+				TLSClientConfig: config.TlsConfig,
+			},
+		}
+	} else {
+		cli = &http.Client{
+			Timeout: time.Millisecond * time.Duration(config.ConnectionTimeout),
+		}
+	}
 	return &HttpClientImpl{
 		urlPrefix: config.urlPrefix,
 		cli:       cli,
