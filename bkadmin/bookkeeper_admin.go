@@ -41,7 +41,7 @@ type BookkeeperAdmin struct {
 	Heartbeat    Heartbeat
 	AutoRecovery *AutoRecovery
 	Bookies      *Bookies
-	Configs      *Configs
+	Config       BookieConfig
 	Ledgers      *Ledgers
 }
 
@@ -66,7 +66,7 @@ func NewBookkeeperAdmin(config Config) (*BookkeeperAdmin, error) {
 		Heartbeat:    NewHeartbeat(client),
 		AutoRecovery: newAutoRecovery(client),
 		Bookies:      newBookies(client),
-		Configs:      newConfigs(client),
+		Config:       NewBookieConfig(client),
 		Ledgers:      newLedgers(client),
 	}, nil
 }

@@ -18,6 +18,7 @@
 package bkadmin
 
 const UrlHeartbeat = "/heartbeat"
+const UrlMetrics = "/metrics"
 
 const (
 	// UrlPath for the Admin API
