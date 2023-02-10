@@ -39,9 +39,10 @@ type Config struct {
 type BookkeeperAdmin struct {
 	cli          HttpClient
 	Heartbeat    Heartbeat
+	Metrics      Metrics
+	Config       BookieConfig
 	AutoRecovery *AutoRecovery
 	Bookies      *Bookies
-	Configs      *Configs
 	Ledgers      *Ledgers
 }
 
@@ -64,9 +65,10 @@ func NewBookkeeperAdmin(config Config) (*BookkeeperAdmin, error) {
 	return &BookkeeperAdmin{
 		cli:          client,
 		Heartbeat:    NewHeartbeat(client),
+		Metrics:      NewMetrics(client),
+		Config:       NewBookieConfig(client),
 		AutoRecovery: newAutoRecovery(client),
 		Bookies:      newBookies(client),
-		Configs:      newConfigs(client),
 		Ledgers:      newLedgers(client),
 	}, nil
 }
