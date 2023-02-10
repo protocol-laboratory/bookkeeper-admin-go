@@ -22,11 +22,14 @@ import (
 	"testing"
 )
 
-func TestConfigsGet(t *testing.T) {
+func TestBookieConfigImpl_GetServerConfigs(t *testing.T) {
 	broker := startTestBroker(t)
 	defer broker.Close()
 	admin := NewTestBookkeeperAdmin(t, broker.webPort)
-	config, err := admin.Configs.GetConfig()
+	cm, err := admin.Config.GetServerConfig()
 	require.Nil(t, err)
-	require.Greater(t, len(config), 0)
+	require.EqualValues(t, "localhost", cm.GetValue("advertisedAddress"))
+	require.EqualValues(t, "true", cm.GetValue("allowLoopback"))
+	require.EqualValues(t, "3181", cm.GetValue("bookiePort"))
+	require.EqualValues(t, "zk://127.0.0.1:2181/ledgers", cm.GetValue("metadataServiceUri"))
 }

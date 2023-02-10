@@ -17,54 +17,25 @@
 
 package bkadmin
 
-import (
-	"encoding/json"
-	"errors"
-	"io"
-)
+import "io"
 
-type Configs struct {
+type MetricsImpl struct {
 	cli HttpClient
 }
 
-func newConfigs(cli HttpClient) *Configs {
-	return &Configs{cli: cli}
-}
-
-func (c *Configs) PutConfig(config map[string]string) error {
-	data, err := json.Marshal(config)
+func (m *MetricsImpl) Metrics() (string, error) {
+	resp, err := m.cli.Get(UrlMetrics)
 	if err != nil {
-		return err
-	}
-	resp, err := c.cli.Put(UrlConfigServerConfig, data)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	if !StatusOk(resp.StatusCode) {
-		str, err := ReadAll(resp.Body)
-		if err != nil {
-			return err
-		}
-		return errors.New(str)
-	}
-	return nil
-}
-
-func (c *Configs) GetConfig() (map[string]string, error) {
-	resp, err := c.cli.Get(UrlConfigServerConfig)
-	if err != nil {
-		return nil, err
+		return "", err
 	}
 	defer resp.Body.Close()
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	var config map[string]string
-	err = json.Unmarshal(data, &config)
-	if err != nil {
-		return nil, err
-	}
-	return config, nil
+	return string(data), nil
+}
+
+func NewMetrics(cli HttpClient) Metrics {
+	return &MetricsImpl{cli: cli}
 }
