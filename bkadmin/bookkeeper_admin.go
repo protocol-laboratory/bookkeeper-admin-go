@@ -38,19 +38,11 @@ type Config struct {
 
 type BookkeeperAdmin struct {
 	cli          HttpClient
+	Heartbeat    Heartbeat
 	AutoRecovery *AutoRecovery
 	Bookies      *Bookies
 	Configs      *Configs
 	Ledgers      *Ledgers
-}
-
-func (b *BookkeeperAdmin) Heartbeat() (bool, error) {
-	resp, err := b.cli.Get(UrlHeartbeat)
-	if err != nil {
-		return false, err
-	}
-	defer resp.Body.Close()
-	return resp.StatusCode == 200, nil
 }
 
 func NewDefaultBookkeeperAdmin() (*BookkeeperAdmin, error) {
@@ -71,6 +63,7 @@ func NewBookkeeperAdmin(config Config) (*BookkeeperAdmin, error) {
 	}
 	return &BookkeeperAdmin{
 		cli:          client,
+		Heartbeat:    NewHeartbeat(client),
 		AutoRecovery: newAutoRecovery(client),
 		Bookies:      newBookies(client),
 		Configs:      newConfigs(client),

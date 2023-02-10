@@ -22,11 +22,11 @@ import (
 	"testing"
 )
 
-func TestBookkeeperAdminHeartbeat(t *testing.T) {
+func TestHeartbeatImpl_Heartbeat(t *testing.T) {
 	broker := startTestBroker(t)
 	defer broker.Close()
 	admin := NewTestBookkeeperAdmin(t, broker.webPort)
-	isOk, err := admin.Heartbeat()
+	isOk, err := admin.Heartbeat.Heartbeat()
 	require.Nil(t, err)
 	require.True(t, isOk)
 }
