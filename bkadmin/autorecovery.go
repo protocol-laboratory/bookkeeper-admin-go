@@ -27,12 +27,12 @@ type AutoRecovery struct {
 }
 
 type AutoRecoveryStatus struct {
-	Enabled bool `json:"enabled,required"`
+	Enabled bool `json:"enabled"`
 }
 
 type RecoveryBookieReqData struct {
-	BookieSrc    []string `json:"bookie_src,required"`
-	DeleteCookie bool     `json:"delete_cookie,required"`
+	BookieSrc    []string `json:"bookie_src"`
+	DeleteCookie bool     `json:"delete_cookie"`
 }
 
 type ListUnderReplicatedLedgerReqData struct {
@@ -46,7 +46,7 @@ type UnderReplicatedLedger struct {
 }
 
 type Auditor struct {
-	Auditor string `json:"Auditor,required"`
+	Auditor string `json:"Auditor"`
 }
 
 func newAutoRecovery(cli HttpClient) *AutoRecovery {
